@@ -322,7 +322,7 @@
 							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
-									"activity": "Set variable2",
+									"activity": "Set variable3",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -515,7 +515,7 @@
 							}
 						},
 						{
-							"name": "Set variable2",
+							"name": "Set variable3",
 							"type": "SetVariable",
 							"dependsOn": [],
 							"policy": {
@@ -524,9 +524,9 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"variableName": "Value",
+								"variableName": "Name of the file",
 								"value": {
-									"value": "@{indexof(item().name,'.')}",
+									"value": "@{substring(item(),1,add(indexof(item().name,'.'),-1))}",
 									"type": "Expression"
 								}
 							}
@@ -566,6 +566,9 @@
 				"type": "Integer"
 			},
 			"Value": {
+				"type": "String"
+			},
+			"Name of the file": {
 				"type": "String"
 			}
 		},
