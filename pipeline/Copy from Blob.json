@@ -300,7 +300,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Get Metadata of hrpsource",
+						"activity": "Set variable1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -318,7 +318,16 @@
 						{
 							"name": "Process the data",
 							"type": "Copy",
-							"dependsOn": [],
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
+							"dependsOn": [
+								{
+									"activity": "Set variable2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "0.12:00:00",
 								"retry": 0,
@@ -382,6 +391,8 @@
 						{
 							"name": "Archieving",
 							"type": "Copy",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Process the data",
@@ -459,6 +470,8 @@
 						{
 							"name": "Delete the files from source after processing",
 							"type": "Delete",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Archieving",
@@ -500,11 +513,62 @@
 									"enablePartitionDiscovery": false
 								}
 							}
+						},
+						{
+							"name": "Set variable2",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Value",
+								"value": {
+									"value": "@{indexof(item().name,'.')}",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata of hrpsource",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "index",
+					"value": {
+						"value": "@activity('Get Metadata of hrpsource').output.childItems",
+						"type": "Expression"
+					}
+				}
 			}
 		],
+		"variables": {
+			"index": {
+				"type": "Integer"
+			},
+			"Value": {
+				"type": "String"
+			}
+		},
 		"annotations": [],
 		"lastPublishTime": "2025-03-21T07:11:56Z"
 	},
