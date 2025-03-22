@@ -647,7 +647,7 @@
 				"type": "String"
 			},
 			"index_1": {
-				"type": "String"
+				"type": "Integer"
 			},
 			"length_1": {
 				"type": "Integer"
