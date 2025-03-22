@@ -322,7 +322,7 @@
 							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
-									"activity": "Extension",
+									"activity": "Length",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -527,32 +527,6 @@
 								"variableName": "Name of the file",
 								"value": {
 									"value": "@{concat(substring(item().name,0,indexof(item().name,'.')),formatDateTime(utcNow(),'yyyyMMdd'))}",
-									"type": "Expression"
-								}
-							}
-						},
-						{
-							"name": "Extension",
-							"type": "SetVariable",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
-							"dependsOn": [
-								{
-									"activity": "Length",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "Extension",
-								"value": {
-									"value": "@{substring(item().name,indexof(item().name,'.'),length(item().name))}",
 									"type": "Expression"
 								}
 							}
