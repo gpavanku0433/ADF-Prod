@@ -366,7 +366,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"Filename": {
-											"value": "@item().childItems",
+											"value": "@item().name",
 											"type": "Expression"
 										}
 									}
