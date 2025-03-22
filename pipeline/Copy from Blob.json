@@ -611,7 +611,7 @@
 		],
 		"variables": {
 			"index": {
-				"type": "String"
+				"type": "Integer"
 			},
 			"Value": {
 				"type": "String"
@@ -622,13 +622,7 @@
 			"Extension": {
 				"type": "String"
 			},
-			"value": {
-				"type": "Integer"
-			},
 			"index_1": {
-				"type": "String"
-			},
-			"length": {
 				"type": "String"
 			},
 			"length_1": {
