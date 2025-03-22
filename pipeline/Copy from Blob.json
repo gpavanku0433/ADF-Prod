@@ -322,7 +322,7 @@
 							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
-									"activity": "Length",
+									"activity": "Set variable2",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -578,6 +578,30 @@
 									"type": "Expression"
 								}
 							}
+						},
+						{
+							"name": "Set variable2",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Length",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "FN",
+								"value": {
+									"value": "@{concat(variables('Name of the file'),substring(item().name,variables('index_1'),variables('length_1')))}",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
@@ -627,6 +651,9 @@
 			},
 			"length_1": {
 				"type": "Integer"
+			},
+			"FN": {
+				"type": "String"
 			}
 		},
 		"annotations": [],
