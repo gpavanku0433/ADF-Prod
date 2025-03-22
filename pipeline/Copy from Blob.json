@@ -534,6 +534,8 @@
 						{
 							"name": "Index position",
 							"type": "SetVariable",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Filename",
@@ -548,7 +550,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"variableName": "index_1",
+								"variableName": "index_2",
 								"value": {
 									"value": "@{indexof(item().name,'.')}",
 									"type": "Expression"
@@ -598,7 +600,7 @@
 							"typeProperties": {
 								"variableName": "FN",
 								"value": {
-									"value": "@{concat(variables('Name of the file'),substring(item().name,variables('index_1'),variables('length_1')))}",
+									"value": "@{concat(variables('Name of the file'),substring(item().name,indexof(item().name,'.'),variables('length_1')))}",
 									"type": "Expression"
 								}
 							}
@@ -654,6 +656,9 @@
 			},
 			"FN": {
 				"type": "String"
+			},
+			"index_2": {
+				"type": "Integer"
 			}
 		},
 		"annotations": [],
