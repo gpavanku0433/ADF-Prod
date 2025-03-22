@@ -526,7 +526,7 @@
 							"typeProperties": {
 								"variableName": "Name of the file",
 								"value": {
-									"value": "@{concat(substring(item().name,0,indexof(item().name,'.')),utcNow())}",
+									"value": "@{concat(substring(item().name,0,indexof(item().name,'.')),formatDateTime(utcNow(),'yyyyMMdd'))}",
 									"type": "Expression"
 								}
 							}
