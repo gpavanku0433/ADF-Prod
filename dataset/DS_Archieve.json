@@ -5,6 +5,11 @@
 			"referenceName": "LS_HRP_BLOB",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"Rename": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
