@@ -534,9 +534,11 @@
 						{
 							"name": "Extension",
 							"type": "SetVariable",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
-									"activity": "Filename",
+									"activity": "Set variable3",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -551,6 +553,54 @@
 								"variableName": "Extension",
 								"value": {
 									"value": "@{substring(item().name,indexof(item().name,'.'),length(item().name))}",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set variable2",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Filename",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "index_1",
+								"value": {
+									"value": "@{indexof(item().name,'.')}",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set variable3",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Set variable2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "length_1",
+								"value": {
+									"value": "@length(item().name)",
 									"type": "Expression"
 								}
 							}
@@ -587,7 +637,7 @@
 		],
 		"variables": {
 			"index": {
-				"type": "Integer"
+				"type": "String"
 			},
 			"Value": {
 				"type": "String"
@@ -597,6 +647,18 @@
 			},
 			"Extension": {
 				"type": "String"
+			},
+			"value": {
+				"type": "Integer"
+			},
+			"index_1": {
+				"type": "String"
+			},
+			"length": {
+				"type": "String"
+			},
+			"length_1": {
+				"type": "Integer"
 			}
 		},
 		"annotations": [],
