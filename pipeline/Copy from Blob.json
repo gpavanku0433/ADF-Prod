@@ -526,7 +526,7 @@
 							"typeProperties": {
 								"variableName": "Name of the file",
 								"value": {
-									"value": "@{substring(item().name,0,indexof(item().name,'.'))}",
+									"value": "@{concat(substring(item().name,0,indexof(item().name,'.')),utcNow())}",
 									"type": "Expression"
 								}
 							}
