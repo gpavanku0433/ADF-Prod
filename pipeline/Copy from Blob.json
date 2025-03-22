@@ -446,7 +446,13 @@
 							"outputs": [
 								{
 									"referenceName": "DS_Archieve",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"Rename": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						},
