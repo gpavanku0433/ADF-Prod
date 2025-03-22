@@ -538,7 +538,7 @@
 							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
-									"activity": "Set variable3",
+									"activity": "Length",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -558,7 +558,7 @@
 							}
 						},
 						{
-							"name": "Set variable2",
+							"name": "Index position",
 							"type": "SetVariable",
 							"dependsOn": [
 								{
@@ -582,11 +582,11 @@
 							}
 						},
 						{
-							"name": "Set variable3",
+							"name": "Length",
 							"type": "SetVariable",
 							"dependsOn": [
 								{
-									"activity": "Set variable2",
+									"activity": "Index position",
 									"dependencyConditions": [
 										"Succeeded"
 									]
