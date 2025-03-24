@@ -104,7 +104,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "select 0/1",
+								"sqlReaderQuery": "Update dbo.employee\r\nset EMPLOYEE_ID=1200\r\nwhere EMPLOYEE_ID=198",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
