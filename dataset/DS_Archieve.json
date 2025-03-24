@@ -19,7 +19,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": {
-					"value": "@{concat(substring(dataset().Rename,1,add(indexof(dataset().Rename,'.'),-1)),utcNow(),substring(dataset().Rename,add(indexof(dataset().Rename,'.'),1),length(dataset().Rename)))}",
+					"value": "@concat(dataset().Rename,'_',utcnow(),dataset().extension)",
 					"type": "Expression"
 				},
 				"container": "hrparchieve"
