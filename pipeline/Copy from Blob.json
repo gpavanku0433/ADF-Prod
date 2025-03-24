@@ -288,6 +288,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -391,8 +392,6 @@
 						{
 							"name": "Archieving",
 							"type": "Copy",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Process the data",
@@ -462,6 +461,10 @@
 										"Rename": {
 											"value": "@item().name",
 											"type": "Expression"
+										},
+										"extension": {
+											"value": "@item().extension",
+											"type": "Expression"
 										}
 									}
 								}
@@ -517,6 +520,8 @@
 						{
 							"name": "Filename",
 							"type": "SetVariable",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [],
 							"policy": {
 								"secureOutput": false,
@@ -560,6 +565,8 @@
 						{
 							"name": "Length",
 							"type": "SetVariable",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Index position",
@@ -584,6 +591,8 @@
 						{
 							"name": "Set variable2",
 							"type": "SetVariable",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Length",
