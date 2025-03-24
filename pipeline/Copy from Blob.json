@@ -459,11 +459,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"Rename": {
-											"value": "@item().name",
-											"type": "Expression"
-										},
-										"extension": {
-											"value": "@item().extension",
+											"value": "@concat(item().name, '_', formatDateTime(utcnow(), 'yyyyMMdd'), '.',item().name.split('.').last())",
 											"type": "Expression"
 										}
 									}
