@@ -8,9 +8,6 @@
 		"parameters": {
 			"Rename": {
 				"type": "string"
-			},
-			"extension": {
-				"type": "string"
 			}
 		},
 		"annotations": [],
