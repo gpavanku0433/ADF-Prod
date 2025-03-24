@@ -459,7 +459,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"Rename": {
-											"value": "@concat(item().name, '_', formatDateTime(utcnow(), 'yyyyMMdd'), '.',item().name.split('.').last())",
+											"value": "@concat(item().name, '_', formatDateTime(utcnow(), 'yyyyMMdd'), '.',item().name.last())",
 											"type": "Expression"
 										}
 									}
