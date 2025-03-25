@@ -23,7 +23,8 @@
 					"dataset": {
 						"referenceName": "DS_Employee_SQL",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
