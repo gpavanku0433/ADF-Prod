@@ -319,11 +319,9 @@
 						{
 							"name": "Process the data",
 							"type": "Copy",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
-									"activity": "Set variable1",
+									"activity": "First Name",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -392,8 +390,6 @@
 						{
 							"name": "Archieving",
 							"type": "Copy",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Process the data",
@@ -471,8 +467,6 @@
 						{
 							"name": "Delete the files from source after processing",
 							"type": "Delete",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Archieving",
@@ -516,7 +510,7 @@
 							}
 						},
 						{
-							"name": "Filename",
+							"name": "Last Name",
 							"type": "SetVariable",
 							"dependsOn": [],
 							"policy": {
@@ -533,13 +527,11 @@
 							}
 						},
 						{
-							"name": "Set variable1",
+							"name": "First Name",
 							"type": "SetVariable",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
-									"activity": "Filename",
+									"activity": "Last Name",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -551,9 +543,9 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"variableName": "get file extension",
+								"variableName": "First Name",
 								"value": {
-									"value": "@last(variables('Name of the file'))",
+									"value": "@first(split(item().name,'.'))",
 									"type": "Expression"
 								}
 							}
@@ -567,6 +559,9 @@
 				"type": "String"
 			},
 			"get file extension": {
+				"type": "String"
+			},
+			"First Name": {
 				"type": "String"
 			}
 		},
