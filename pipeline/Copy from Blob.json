@@ -301,7 +301,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Set variable1",
+						"activity": "Get Metadata of hrpsource",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -533,32 +533,6 @@
 							}
 						}
 					]
-				}
-			},
-			{
-				"name": "Set variable1",
-				"type": "SetVariable",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
-				"dependsOn": [
-					{
-						"activity": "Get Metadata of hrpsource",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "index",
-					"value": {
-						"value": "@activity('Get Metadata of hrpsource').output.childItems",
-						"type": "Expression"
-					}
 				}
 			}
 		],
