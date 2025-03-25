@@ -197,7 +197,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"Rename": {
-											"value": "@{concat(variables('First Name'),'_',formatDateTime(utcnow(),'yyyyMMdd'),variables('Name of the file'))}",
+											"value": "@{concat(variables('First Name'),'_',formatDateTime(utcnow(),'yyyyMMdd'),'.',variables('Name of the file'))}",
 											"type": "Expression"
 										}
 									}
