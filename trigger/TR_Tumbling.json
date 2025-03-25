@@ -2,7 +2,7 @@
 	"name": "TR_Tumbling",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipeline": {
 			"pipelineReference": {
 				"referenceName": "Copy from Blob",
