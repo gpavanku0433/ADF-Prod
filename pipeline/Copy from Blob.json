@@ -323,7 +323,7 @@
 							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
-									"activity": "Set variable2",
+									"activity": "Filename",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -392,6 +392,8 @@
 						{
 							"name": "Archieving",
 							"type": "Copy",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Process the data",
@@ -516,8 +518,6 @@
 						{
 							"name": "Filename",
 							"type": "SetVariable",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [],
 							"policy": {
 								"secureOutput": false,
@@ -527,85 +527,7 @@
 							"typeProperties": {
 								"variableName": "Name of the file",
 								"value": {
-									"value": "@{concat(substring(item().name,0,indexof(item().name,'.')),formatDateTime(utcNow(),'yyyyMMdd'))}",
-									"type": "Expression"
-								}
-							}
-						},
-						{
-							"name": "Index position",
-							"type": "SetVariable",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
-							"dependsOn": [
-								{
-									"activity": "Filename",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "index_2",
-								"value": {
-									"value": "@{indexof(item().name,'.')}",
-									"type": "Expression"
-								}
-							}
-						},
-						{
-							"name": "Length",
-							"type": "SetVariable",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
-							"dependsOn": [
-								{
-									"activity": "Index position",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "length_1",
-								"value": {
-									"value": "@length(item().name)",
-									"type": "Expression"
-								}
-							}
-						},
-						{
-							"name": "Set variable2",
-							"type": "SetVariable",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
-							"dependsOn": [
-								{
-									"activity": "Length",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "FN",
-								"value": {
-									"value": "@{concat(variables('Name of the file'),substring(item().name,indexof(item().name,'.'),variables('length_1')))}",
+									"value": "@{split(item().name,'.')}",
 									"type": "Expression"
 								}
 							}
