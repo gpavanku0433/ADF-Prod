@@ -319,6 +319,8 @@
 						{
 							"name": "Process the data",
 							"type": "Copy",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "First Name",
@@ -390,6 +392,8 @@
 						{
 							"name": "Archieving",
 							"type": "Copy",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Process the data",
@@ -467,6 +471,8 @@
 						{
 							"name": "Delete the files from source after processing",
 							"type": "Delete",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Archieving",
