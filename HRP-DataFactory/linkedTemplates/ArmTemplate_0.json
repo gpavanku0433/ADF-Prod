@@ -547,6 +547,9 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"folder": {
+					"name": "ADF Training"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -898,6 +901,9 @@
 						"type": "String"
 					}
 				},
+				"folder": {
+					"name": "ADF Training"
+				},
 				"annotations": [],
 				"lastPublishTime": "2025-03-21T07:11:56Z"
 			},
@@ -907,6 +913,51 @@
 				"[concat(variables('factoryId'), '/datasets/DS_Destination_Blob')]",
 				"[concat(variables('factoryId'), '/datasets/DS_Archieve')]",
 				"[concat(variables('factoryId'), '/linkedServices/LS_HRP_BLOB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ADF_Training')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "DS_Employee_SQL",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "ADF Training"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_Employee_SQL')]"
 			]
 		},
 		{
@@ -945,7 +996,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Stopped",
+				"runtimeState": "Started",
 				"pipeline": {
 					"pipelineReference": {
 						"referenceName": "Copy from Blob",
