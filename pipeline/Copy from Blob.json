@@ -527,7 +527,7 @@
 							"typeProperties": {
 								"variableName": "Name of the file",
 								"value": {
-									"value": "@{split(item().name,'.')}",
+									"value": "@{last(item().name)}",
 									"type": "Expression"
 								}
 							}
