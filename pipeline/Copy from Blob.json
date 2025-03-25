@@ -319,8 +319,6 @@
 						{
 							"name": "Process the data",
 							"type": "Copy",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "First Name",
@@ -392,8 +390,6 @@
 						{
 							"name": "Archieving",
 							"type": "Copy",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Process the data",
@@ -461,7 +457,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"Rename": {
-											"value": "@concat(item().name, '_', formatDateTime(utcnow(), 'yyyyMMdd'), '.',item().name.last())",
+											"value": "@{concat(variables('First Name'),'_',formatDateTime(utcnow(),'yyyyMMdd'),variables('Name of the file'))}",
 											"type": "Expression"
 										}
 									}
@@ -471,8 +467,6 @@
 						{
 							"name": "Delete the files from source after processing",
 							"type": "Delete",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Archieving",
