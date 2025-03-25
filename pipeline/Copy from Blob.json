@@ -323,7 +323,7 @@
 							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
-									"activity": "Filename",
+									"activity": "Set variable1",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -531,35 +531,41 @@
 									"type": "Expression"
 								}
 							}
+						},
+						{
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Filename",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "get file extension",
+								"value": {
+									"value": "@last(variables('Name of the file'))",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
 			}
 		],
 		"variables": {
-			"index": {
-				"type": "Integer"
-			},
-			"Value": {
-				"type": "String"
-			},
 			"Name of the file": {
 				"type": "String"
 			},
-			"Extension": {
+			"get file extension": {
 				"type": "String"
-			},
-			"index_1": {
-				"type": "Integer"
-			},
-			"length_1": {
-				"type": "Integer"
-			},
-			"FN": {
-				"type": "String"
-			},
-			"index_2": {
-				"type": "Integer"
 			}
 		},
 		"annotations": [],
