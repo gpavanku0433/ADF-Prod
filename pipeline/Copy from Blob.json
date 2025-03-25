@@ -527,7 +527,7 @@
 							"typeProperties": {
 								"variableName": "Name of the file",
 								"value": {
-									"value": "@{item().name}",
+									"value": "@last(split(item().name,'.'))",
 									"type": "Expression"
 								}
 							}
@@ -535,6 +535,8 @@
 						{
 							"name": "Set variable1",
 							"type": "SetVariable",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Filename",
