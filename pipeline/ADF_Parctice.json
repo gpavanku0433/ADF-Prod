@@ -89,6 +89,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "ADF Training"
+		},
 		"annotations": []
 	}
 }

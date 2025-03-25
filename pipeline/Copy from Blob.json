@@ -335,6 +335,9 @@
 				"type": "String"
 			}
 		},
+		"folder": {
+			"name": "ADF Training"
+		},
 		"annotations": [],
 		"lastPublishTime": "2025-03-21T07:11:56Z"
 	},
