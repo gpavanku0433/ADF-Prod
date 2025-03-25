@@ -53,8 +53,7 @@
 						"value": "@activity('Get Metadata of hrpsource').output.childItems",
 						"type": "Expression"
 					},
-					"isSequential": false,
-					"batchCount": 50,
+					"isSequential": true,
 					"activities": [
 						{
 							"name": "Process the data",
@@ -99,6 +98,21 @@
 									}
 								},
 								"enableStaging": false,
+								"parallelCopies": 32,
+								"enableSkipIncompatibleRow": false,
+								"logSettings": {
+									"enableCopyActivityLog": true,
+									"copyActivityLogSettings": {
+										"logLevel": "Warning",
+										"enableReliableLogging": false
+									},
+									"logLocationSettings": {
+										"linkedServiceName": {
+											"referenceName": "LS_HRP_BLOB",
+											"type": "LinkedServiceReference"
+										}
+									}
+								},
 								"translator": {
 									"type": "TabularTranslator",
 									"typeConversion": true,
