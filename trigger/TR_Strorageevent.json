@@ -1,0 +1,25 @@
+{
+	"name": "TR_Strorageevent",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "ADF_Parctice",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/hrpsource/blobs/employees",
+			"blobPathEndsWith": "csv",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/4acd02d8-7af8-4cd8-b4eb-7aa55a7576fb/resourceGroups/ADFTraining/providers/Microsoft.Storage/storageAccounts/hrpstorageacct",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
