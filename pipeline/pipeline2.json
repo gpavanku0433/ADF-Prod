@@ -1,0 +1,61 @@
+{
+	"name": "pipeline2",
+	"properties": {
+		"activities": [
+			{
+				"name": "StartTime",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Strarttime",
+					"value": {
+						"value": "@pipeline().parameters.StrartTime",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "EndTime",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "EndTime",
+					"value": {
+						"value": "@pipeline().parameters.EndTime",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"StrartTime": {
+				"type": "string"
+			},
+			"EndTime": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"Strarttime": {
+				"type": "String"
+			},
+			"EndTime": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "ADF Training"
+		},
+		"annotations": []
+	}
+}
