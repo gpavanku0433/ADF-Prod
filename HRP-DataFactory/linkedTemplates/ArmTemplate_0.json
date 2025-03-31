@@ -14,6 +14,10 @@
 		"LS_HRP_BLOB_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_HRP_BLOB'"
+		},
+		"TR_Strorageevent_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/4acd02d8-7af8-4cd8-b4eb-7aa55a7576fb/resourceGroups/ADFTraining/providers/Microsoft.Storage/storageAccounts/hrpstorageacct"
 		}
 	},
 	"variables": {
@@ -480,7 +484,6 @@
 							},
 							"sink": {
 								"type": "AzureSqlSink",
-								"preCopyScript": "Truncate Table dbo.Employee",
 								"writeBehavior": "insert",
 								"sqlWriterUseTableLock": false,
 								"disableMetricsCollection": false
@@ -509,39 +512,6 @@
 								"parameters": {}
 							}
 						]
-					},
-					{
-						"name": "Lookup1",
-						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "Copy data1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "Update dbo.employee\r\nset EMPLOYEE_ID=1200\r\nwhere EMPLOYEE_ID=198\r\n\r\nselect 1",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "DS_Employee_SQL",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
 					}
 				],
 				"policy": {
@@ -1004,12 +974,12 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/TR_Scheduled')]",
+			"name": "[concat(parameters('factoryName'), '/TR_Strorageevent')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Stopped",
+				"runtimeState": "Started",
 				"pipelines": [
 					{
 						"pipelineReference": {
@@ -1019,49 +989,19 @@
 						"parameters": {}
 					}
 				],
-				"type": "ScheduleTrigger",
+				"type": "BlobEventsTrigger",
 				"typeProperties": {
-					"recurrence": {
-						"frequency": "Minute",
-						"interval": 1,
-						"startTime": "2025-03-24T15:04:00",
-						"timeZone": "India Standard Time"
-					}
+					"blobPathBeginsWith": "/hrpsource/blobs/employees",
+					"blobPathEndsWith": "csv",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('TR_Strorageevent_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/ADF_Parctice')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/TR_Tumbling')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "Copy from Blob",
-						"type": "PipelineReference"
-					},
-					"parameters": {}
-				},
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Minute",
-					"interval": 5,
-					"startTime": "2025-03-25T15:12:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 50,
-					"retryPolicy": {
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Copy from Blob')]"
 			]
 		}
 	]
