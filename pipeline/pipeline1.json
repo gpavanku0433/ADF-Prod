@@ -39,7 +39,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(variables('Dummy'),true)",
+						"value": "@equals(variables('Dummy3'),true)",
 						"type": "Expression"
 					},
 					"ifFalseActivities": [
