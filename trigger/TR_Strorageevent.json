@@ -18,6 +18,7 @@
 			"ignoreEmptyBlobs": true,
 			"scope": "/subscriptions/4acd02d8-7af8-4cd8-b4eb-7aa55a7576fb/resourceGroups/ADFTraining/providers/Microsoft.Storage/storageAccounts/hrpstorageacct",
 			"events": [
+				"Microsoft.Storage.BlobDeleted",
 				"Microsoft.Storage.BlobCreated"
 			]
 		}
