@@ -38,7 +38,7 @@
 			}
 		],
 		"parameters": {
-			"StrartTime": {
+			"StartTime": {
 				"type": "string"
 			},
 			"EndTime": {
