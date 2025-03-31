@@ -5,7 +5,16 @@
 			{
 				"name": "Validation1",
 				"type": "Validation",
-				"dependsOn": [],
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Set variable3",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
@@ -30,7 +39,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(activity('Validation1').output.exists,true)",
+						"value": "@equals(variables('Dummy'),true)",
 						"type": "Expression"
 					},
 					"ifFalseActivities": [
@@ -72,6 +81,23 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Set variable3",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Dummy3",
+					"value": {
+						"value": "@concat('False')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"variables": {
@@ -79,6 +105,9 @@
 				"type": "String"
 			},
 			"Dummy1": {
+				"type": "String"
+			},
+			"Dummy3": {
 				"type": "String"
 			}
 		},
