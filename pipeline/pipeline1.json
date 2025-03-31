@@ -33,6 +33,25 @@
 						"value": "@equals(activity('Validation1').output.exists,true)",
 						"type": "Expression"
 					},
+					"ifFalseActivities": [
+						{
+							"name": "Set variable2",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Dummy1",
+								"value": {
+									"value": "@concat('Table doesnot exist')",
+									"type": "Expression"
+								}
+							}
+						}
+					],
 					"ifTrueActivities": [
 						{
 							"name": "Set variable1",
@@ -57,6 +76,9 @@
 		],
 		"variables": {
 			"Dummy": {
+				"type": "String"
+			},
+			"Dummy1": {
 				"type": "String"
 			}
 		},
