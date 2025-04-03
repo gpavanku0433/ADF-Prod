@@ -1,0 +1,16 @@
+{
+	"name": "DS_Dtaflow_Sink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_HRP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "employee_20250403"
+		}
+	}
+}
