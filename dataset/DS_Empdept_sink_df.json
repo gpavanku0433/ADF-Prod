@@ -1,0 +1,35 @@
+{
+	"name": "DS_Empdept_sink_df",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_HRP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Empid",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Empname",
+				"type": "varchar"
+			},
+			{
+				"name": "Empsalary",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Departmentname",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "employeedepartment"
+		}
+	}
+}

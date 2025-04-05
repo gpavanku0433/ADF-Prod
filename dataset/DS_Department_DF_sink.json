@@ -1,0 +1,32 @@
+{
+	"name": "DS_Department_DF_sink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_HRP_BLOB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Department.csv",
+				"container": "hrpsource"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Deptid",
+				"type": "String"
+			},
+			{
+				"name": "Deptname",
+				"type": "String"
+			}
+		]
+	}
+}
