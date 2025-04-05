@@ -17,6 +17,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "source2"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_Dtaflow_Sink",
+						"type": "DatasetReference"
+					},
+					"name": "source3"
 				}
 			],
 			"sinks": [
@@ -43,6 +50,9 @@
 				},
 				{
 					"name": "aggregate1"
+				},
+				{
+					"name": "join2"
 				}
 			],
 			"scriptLines": [
@@ -78,6 +88,10 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source2",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source3",
 				"source1, source2 join(source1@EMPLOYEE_ID == source2@EMPLOYEE_ID,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
@@ -103,6 +117,11 @@
 				"aggregate1 sort(desc(EMPLOYEE_ID, true)) ~> sort1",
 				"filter1 aggregate(groupBy(EMPLOYEE_ID),",
 				"     SALARY = max(SALARY)) ~> aggregate1",
+				"source3, source2 join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join2",
 				"sort1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
