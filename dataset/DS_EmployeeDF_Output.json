@@ -10,10 +10,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": {
-					"value": "@concat('sink_df.csv')",
-					"type": "Expression"
-				},
 				"container": "hrpsource"
 			},
 			"columnDelimiter": ",",
