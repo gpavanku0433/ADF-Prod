@@ -51,13 +51,33 @@
 					},
 					"LS_HRP_BLOB_connectionString": {
 						"value": "[parameters('LS_HRP_BLOB_connectionString')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "HRP-DataFactory_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"TR_Strorageevent_properties_typeProperties_scope": {
 						"value": "[parameters('TR_Strorageevent_properties_typeProperties_scope')]"
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'HRP-DataFactory_ArmTemplate_0')]"
+			]
 		}
 	]
 }
