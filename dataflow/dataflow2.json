@@ -48,18 +48,16 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false,",
-				"     partitionBy('hash', 1)) ~> employee",
+				"     ignoreNoFilesFound: false) ~> employee",
 				"source(output(",
 				"          Deptid as string,",
 				"          Deptname as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false,",
-				"     partitionBy('hash', 1)) ~> Department",
+				"     ignoreNoFilesFound: false) ~> Department",
 				"employee, Department join(employee@Deptid == Department@Deptid,",
-				"     joinType:'inner',",
+				"     joinType:'outer',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> joinbetweenEmployeeandDepartment",
@@ -94,8 +92,7 @@
 				"          Empname,",
 				"          Empsalary,",
 				"          Departmentname = Deptname",
-				"     ),",
-				"     partitionBy('hash', 1)) ~> sink1"
+				"     )) ~> sink1"
 			]
 		}
 	}
