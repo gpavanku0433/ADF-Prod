@@ -73,8 +73,10 @@
 				"     broadcast: 'auto')~> join1",
 				"join1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     partitionFileNames:[(concat('sink_df'))],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1),",
 				"     format: 'table') ~> sink1"
 			]
 		}
