@@ -93,7 +93,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"source1 filter(EMPLOYEE_ID>='198') ~> filter1",
+				"select1 filter(EMPLOYEE_ID>='198') ~> filter1",
 				"filter1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
