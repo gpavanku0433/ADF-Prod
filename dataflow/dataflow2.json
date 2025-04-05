@@ -48,14 +48,16 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> employee",
+				"     ignoreNoFilesFound: false,",
+				"     partitionBy('hash', 1)) ~> employee",
 				"source(output(",
 				"          Deptid as string,",
 				"          Deptname as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> Department",
+				"     ignoreNoFilesFound: false,",
+				"     partitionBy('hash', 1)) ~> Department",
 				"employee, Department join(employee@Deptid == Department@Deptid,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
@@ -85,7 +87,8 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     partitionBy('hash', 1)) ~> sink1"
 			]
 		}
 	}
