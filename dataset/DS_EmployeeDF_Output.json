@@ -1,0 +1,26 @@
+{
+	"name": "DS_EmployeeDF_Output",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_HRP_BLOB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@concat('sink_df.csv')",
+					"type": "Expression"
+				},
+				"container": "hrpsource"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
