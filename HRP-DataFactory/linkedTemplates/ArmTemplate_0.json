@@ -7,13 +7,25 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "HRP-DataFactory"
 		},
-		"LS_HRP_connectionString": {
+		"LS_HRP_password": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'LS_HRP'"
+			"metadata": "Secure string for 'password' of 'LS_HRP'"
 		},
 		"LS_HRP_BLOB_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_HRP_BLOB'"
+		},
+		"LS_HRP_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "hrptraining1.database.windows.net"
+		},
+		"LS_HRP_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "HRP"
+		},
+		"LS_HRP_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "HRP"
 		}
 	},
 	"variables": {
@@ -91,7 +103,16 @@
 				"annotations": [],
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
-					"connectionString": "[parameters('LS_HRP_connectionString')]"
+					"server": "[parameters('LS_HRP_properties_typeProperties_server')]",
+					"database": "[parameters('LS_HRP_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('LS_HRP_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('LS_HRP_password')]"
+					}
 				},
 				"connectVia": {
 					"referenceName": "AutoResolveIntegrationRuntime",
@@ -639,10 +660,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": {
-							"value": "@concat('sink_df.csv')",
-							"type": "Expression"
-						},
 						"container": "hrpsource"
 					},
 					"columnDelimiter": ",",
@@ -654,6 +671,27 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_HRP_BLOB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_SQL_DF_sink')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_HRP",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "employee_df"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_HRP')]"
 			]
 		},
 		{
@@ -817,364 +855,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_Employee_SQL')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy from Blob')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Get Metadata of hrpsource",
-						"type": "GetMetadata",
-						"dependsOn": [
-							{
-								"activity": "Wait1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "DS_HRPSOURCE_BLOB",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"fieldList": [
-								"childItems",
-								"exists",
-								"itemName",
-								"itemType",
-								"lastModified"
-							],
-							"storeSettings": {
-								"type": "AzureBlobStorageReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "DelimitedTextReadSettings"
-							}
-						}
-					},
-					{
-						"name": "Loop",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Get Metadata of hrpsource",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get Metadata of hrpsource').output.childItems",
-								"type": "Expression"
-							},
-							"isSequential": false,
-							"activities": [
-								{
-									"name": "Process the data",
-									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "First Name",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "DelimitedTextSource",
-											"storeSettings": {
-												"type": "AzureBlobStorageReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false
-											},
-											"formatSettings": {
-												"type": "DelimitedTextReadSettings"
-											}
-										},
-										"sink": {
-											"type": "DelimitedTextSink",
-											"storeSettings": {
-												"type": "AzureBlobStorageWriteSettings"
-											},
-											"formatSettings": {
-												"type": "DelimitedTextWriteSettings",
-												"quoteAllText": true,
-												"fileExtension": ".txt"
-											}
-										},
-										"enableStaging": false,
-										"parallelCopies": 32,
-										"enableSkipIncompatibleRow": false,
-										"logSettings": {
-											"enableCopyActivityLog": true,
-											"copyActivityLogSettings": {
-												"logLevel": "Warning",
-												"enableReliableLogging": false
-											},
-											"logLocationSettings": {
-												"linkedServiceName": {
-													"referenceName": "LS_HRP_BLOB",
-													"type": "LinkedServiceReference"
-												}
-											}
-										},
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "DS_source_blob",
-											"type": "DatasetReference",
-											"parameters": {
-												"Filename": {
-													"value": "@item().name",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "DS_Destination_Blob",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									]
-								},
-								{
-									"name": "Archieving",
-									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "Process the data",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "DelimitedTextSource",
-											"storeSettings": {
-												"type": "AzureBlobStorageReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false
-											},
-											"formatSettings": {
-												"type": "DelimitedTextReadSettings"
-											}
-										},
-										"sink": {
-											"type": "DelimitedTextSink",
-											"storeSettings": {
-												"type": "AzureBlobStorageWriteSettings"
-											},
-											"formatSettings": {
-												"type": "DelimitedTextWriteSettings",
-												"quoteAllText": true,
-												"fileExtension": ".txt"
-											}
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "DS_source_blob",
-											"type": "DatasetReference",
-											"parameters": {
-												"Filename": {
-													"value": "@item().name",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "DS_Archieve",
-											"type": "DatasetReference",
-											"parameters": {
-												"Rename": {
-													"value": "@{concat(variables('First Name'),'_',formatDateTime(utcnow(),'yyyyMMdd'),'.',variables('Name of the file'))}",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								},
-								{
-									"name": "Delete the files from source after processing",
-									"type": "Delete",
-									"dependsOn": [
-										{
-											"activity": "Archieving",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"dataset": {
-											"referenceName": "DS_source_blob",
-											"type": "DatasetReference",
-											"parameters": {
-												"Filename": {
-													"value": "@item().name",
-													"type": "Expression"
-												}
-											}
-										},
-										"logStorageSettings": {
-											"linkedServiceName": {
-												"referenceName": "LS_HRP_BLOB",
-												"type": "LinkedServiceReference"
-											},
-											"path": "logs"
-										},
-										"enableLogging": true,
-										"storeSettings": {
-											"type": "AzureBlobStorageReadSettings",
-											"recursive": true,
-											"enablePartitionDiscovery": false
-										}
-									}
-								},
-								{
-									"name": "Last Name",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"policy": {
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "Name of the file",
-										"value": {
-											"value": "@last(split(item().name,'.'))",
-											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "First Name",
-									"type": "SetVariable",
-									"dependsOn": [
-										{
-											"activity": "Last Name",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "First Name",
-										"value": {
-											"value": "@first(split(item().name,'.'))",
-											"type": "Expression"
-										}
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "Wait1",
-						"type": "Wait",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"waitTimeInSeconds": 300
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"variables": {
-					"Name of the file": {
-						"type": "String"
-					},
-					"get file extension": {
-						"type": "String"
-					},
-					"First Name": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "ADF Training"
-				},
-				"annotations": [],
-				"lastPublishTime": "2025-03-21T07:11:56Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DS_HRPSOURCE_BLOB')]",
-				"[concat(variables('factoryId'), '/datasets/DS_source_blob')]",
-				"[concat(variables('factoryId'), '/datasets/DS_Destination_Blob')]",
-				"[concat(variables('factoryId'), '/datasets/DS_Archieve')]",
-				"[concat(variables('factoryId'), '/linkedServices/LS_HRP_BLOB')]"
 			]
 		}
 	]

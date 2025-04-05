@@ -7,13 +7,25 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "HRP-DataFactory"
 		},
-		"LS_HRP_connectionString": {
+		"LS_HRP_password": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'LS_HRP'"
+			"metadata": "Secure string for 'password' of 'LS_HRP'"
 		},
 		"LS_HRP_BLOB_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_HRP_BLOB'"
+		},
+		"LS_HRP_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "hrptraining1.database.windows.net"
+		},
+		"LS_HRP_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "HRP"
+		},
+		"LS_HRP_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "HRP"
 		},
 		"TR_Strorageevent_properties_typeProperties_scope": {
 			"type": "string",
@@ -1036,7 +1048,16 @@
 				"annotations": [],
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
-					"connectionString": "[parameters('LS_HRP_connectionString')]"
+					"server": "[parameters('LS_HRP_properties_typeProperties_server')]",
+					"database": "[parameters('LS_HRP_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('LS_HRP_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('LS_HRP_password')]"
+					}
 				},
 				"connectVia": {
 					"referenceName": "AutoResolveIntegrationRuntime",
@@ -1170,7 +1191,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "DS_EmployeeDF_Output",
+								"referenceName": "DS_SQL_DF_sink",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -1215,22 +1236,30 @@
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> source2",
 						"source1, source2 join(source1@EMPLOYEE_ID == source2@EMPLOYEE_ID,",
-						"     joinType:'left',",
+						"     joinType:'inner',",
 						"     matchType:'exact',",
 						"     ignoreSpaces: false,",
+						"     partitionBy('hash', 1),",
 						"     broadcast: 'auto')~> join1",
 						"join1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     format: 'table') ~> sink1"
+						"     saveOrder: 1,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     partitionBy('hash', 1)) ~> sink1"
 					]
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_Employee_DF')]",
 				"[concat(variables('factoryId'), '/datasets/DS_Employee_DF2')]",
-				"[concat(variables('factoryId'), '/datasets/DS_EmployeeDF_Output')]"
+				"[concat(variables('factoryId'), '/datasets/DS_SQL_DF_sink')]"
 			]
 		},
 		{
@@ -1461,10 +1490,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": {
-							"value": "@concat('sink_df.csv')",
-							"type": "Expression"
-						},
 						"container": "hrpsource"
 					},
 					"columnDelimiter": ",",
@@ -1476,6 +1501,27 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_HRP_BLOB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_SQL_DF_sink')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_HRP",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "employee_df"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_HRP')]"
 			]
 		}
 	]

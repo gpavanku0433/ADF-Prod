@@ -5,11 +5,20 @@
 		"factoryName": {
 			"value": "HRP-DataFactory"
 		},
-		"LS_HRP_connectionString": {
+		"LS_HRP_password": {
 			"value": ""
 		},
 		"LS_HRP_BLOB_connectionString": {
 			"value": ""
+		},
+		"LS_HRP_properties_typeProperties_server": {
+			"value": "hrptraining1.database.windows.net"
+		},
+		"LS_HRP_properties_typeProperties_database": {
+			"value": "HRP"
+		},
+		"LS_HRP_properties_typeProperties_userName": {
+			"value": "HRP"
 		},
 		"TR_Strorageevent_properties_typeProperties_scope": {
 			"value": "/subscriptions/4acd02d8-7af8-4cd8-b4eb-7aa55a7576fb/resourceGroups/ADFTraining/providers/Microsoft.Storage/storageAccounts/hrpstorageacct"
