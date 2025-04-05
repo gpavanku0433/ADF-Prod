@@ -240,7 +240,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "employees.csv",
+						"fileName": "Employee_Data.csv",
 						"container": "hrpsource"
 					},
 					"columnDelimiter": ",",
@@ -728,6 +728,7 @@
 								"type": "AzureSqlSink",
 								"writeBehavior": "insert",
 								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate",
 								"disableMetricsCollection": false
 							},
 							"enableStaging": false,

@@ -526,6 +526,15 @@
 					"transformations": [
 						{
 							"name": "join1"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "filter1"
+						},
+						{
+							"name": "sort1"
 						}
 					],
 					"scriptLines": [
@@ -567,7 +576,25 @@
 						"     ignoreSpaces: false,",
 						"     partitionBy('hash', 1),",
 						"     broadcast: 'auto')~> join1",
-						"join1 sink(allowSchemaDrift: true,",
+						"join1 select(mapColumn(",
+						"          EMPLOYEE_ID = source1@EMPLOYEE_ID,",
+						"          FIRST_NAME = source1@FIRST_NAME,",
+						"          LAST_NAME = source1@LAST_NAME,",
+						"          EMAIL = source1@EMAIL,",
+						"          PHONE_NUMBER = source1@PHONE_NUMBER,",
+						"          HIRE_DATE = source1@HIRE_DATE,",
+						"          JOB_ID = source1@JOB_ID,",
+						"          SALARY = source1@SALARY,",
+						"          COMMISSION_PCT = source1@COMMISSION_PCT,",
+						"          MANAGER_ID = source1@MANAGER_ID,",
+						"          DEPARTMENT_ID = source1@DEPARTMENT_ID",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 filter(EMPLOYEE_ID>='198') ~> filter1",
+						"filter1 sort(desc(EMPLOYEE_ID, true),",
+						"     asc(FIRST_NAME, true)) ~> sort1",
+						"sort1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     deletable:false,",
 						"     insertable:true,",
