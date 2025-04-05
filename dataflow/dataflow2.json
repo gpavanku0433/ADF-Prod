@@ -71,7 +71,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 sort(desc(Empsalary, true)) ~> sort1",
+				"select1 sort(desc(Empsalary, false)) ~> sort1",
 				"sort1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
