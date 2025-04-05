@@ -89,6 +89,12 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          Empid,",
+				"          Empname,",
+				"          Empsalary,",
+				"          Departmentname = Deptname",
+				"     ),",
 				"     partitionBy('hash', 1)) ~> sink1"
 			]
 		}
