@@ -1,0 +1,16 @@
+{
+	"name": "DS_SQL_DF_sink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_HRP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "employee_df"
+		}
+	}
+}
