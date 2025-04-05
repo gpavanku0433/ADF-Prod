@@ -179,6 +179,43 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DS_Department_DF_sink')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_HRP_BLOB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Department.csv",
+						"container": "hrpsource"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Deptid",
+						"type": "String"
+					},
+					{
+						"name": "Deptname",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_HRP_BLOB')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DS_Destination_Blob')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -220,6 +257,46 @@
 				"typeProperties": {
 					"schema": "dbo",
 					"table": "employee_20250403"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_HRP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_Empdept_sink_df')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_HRP",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Empid",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Empname",
+						"type": "varchar"
+					},
+					{
+						"name": "Empsalary",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Departmentname",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "employeedepartment"
 				}
 			},
 			"dependsOn": [
@@ -428,6 +505,51 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DS_Employee_DF_source')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_HRP_BLOB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Employee.csv",
+						"container": "hrpsource"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Empid",
+						"type": "String"
+					},
+					{
+						"name": "Empname",
+						"type": "String"
+					},
+					{
+						"name": "Empsalary",
+						"type": "String"
+					},
+					{
+						"name": "Deptid",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_HRP_BLOB')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DS_Employee_Dest')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -611,169 +733,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_HRP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_source_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_HRP_BLOB",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"Filename": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": {
-							"value": "@dataset().Filename",
-							"type": "Expression"
-						},
-						"container": "hrpsource"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "EMPLOYEE_ID",
-						"type": "String"
-					},
-					{
-						"name": "FIRST_NAME",
-						"type": "String"
-					},
-					{
-						"name": "LAST_NAME",
-						"type": "String"
-					},
-					{
-						"name": "EMAIL",
-						"type": "String"
-					},
-					{
-						"name": "PHONE_NUMBER",
-						"type": "String"
-					},
-					{
-						"name": "HIRE_DATE",
-						"type": "String"
-					},
-					{
-						"name": "JOB_ID",
-						"type": "String"
-					},
-					{
-						"name": "SALARY",
-						"type": "String"
-					},
-					{
-						"name": "COMMISSION_PCT",
-						"type": "String"
-					},
-					{
-						"name": "MANAGER_ID",
-						"type": "String"
-					},
-					{
-						"name": "DEPARTMENT_ID",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_HRP_BLOB')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_Employee_DF_source')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_HRP_BLOB",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "Employee.csv",
-						"container": "hrpsource"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "Empid",
-						"type": "String"
-					},
-					{
-						"name": "Empname",
-						"type": "String"
-					},
-					{
-						"name": "Empsalary",
-						"type": "String"
-					},
-					{
-						"name": "Deptid",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_HRP_BLOB')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_Department_DF_sink')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_HRP_BLOB",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "Department.csv",
-						"container": "hrpsource"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "Deptid",
-						"type": "String"
-					},
-					{
-						"name": "Deptname",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_HRP_BLOB')]"
 			]
 		}
 	]

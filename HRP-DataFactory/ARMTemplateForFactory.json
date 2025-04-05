@@ -684,7 +684,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pipeline2')]",
+			"name": "[concat(parameters('factoryName'), '/pipeline3')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -703,18 +703,18 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "dataflow1",
+								"referenceName": "dataflow2",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
-									"source1": {},
-									"source2": {},
+									"employee": {},
+									"Department": {},
 									"sink1": {}
 								}
 							},
 							"staging": {},
 							"compute": {
-								"coreCount": 32,
+								"coreCount": 80,
 								"computeType": "MemoryOptimized"
 							},
 							"traceLevel": "Fine"
@@ -724,13 +724,10 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
-				"folder": {
-					"name": "ADF Training"
-				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
+				"[concat(variables('factoryId'), '/dataflows/dataflow2')]"
 			]
 		},
 		{
@@ -764,6 +761,43 @@
 					"quoteChar": "\""
 				},
 				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_HRP_BLOB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_Department_DF_sink')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_HRP_BLOB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Department.csv",
+						"container": "hrpsource"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Deptid",
+						"type": "String"
+					},
+					{
+						"name": "Deptname",
+						"type": "String"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_HRP_BLOB')]"
@@ -811,6 +845,46 @@
 				"typeProperties": {
 					"schema": "dbo",
 					"table": "employee_20250403"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_HRP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_Empdept_sink_df')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_HRP",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Empid",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Empname",
+						"type": "varchar"
+					},
+					{
+						"name": "Empsalary",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Departmentname",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "employeedepartment"
 				}
 			},
 			"dependsOn": [
@@ -1010,6 +1084,51 @@
 					},
 					{
 						"name": "DEPARTMENT_ID",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_HRP_BLOB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_Employee_DF_source')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_HRP_BLOB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Employee.csv",
+						"container": "hrpsource"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Empid",
+						"type": "String"
+					},
+					{
+						"name": "Empname",
+						"type": "String"
+					},
+					{
+						"name": "Empsalary",
+						"type": "String"
+					},
+					{
+						"name": "Deptid",
 						"type": "String"
 					}
 				]
@@ -1421,141 +1540,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "DS_Employee_DF",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						},
-						{
-							"dataset": {
-								"referenceName": "DS_Employee_DF2",
-								"type": "DatasetReference"
-							},
-							"name": "source2"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "DS_SQL_DF_sink",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "join1"
-						},
-						{
-							"name": "select1"
-						},
-						{
-							"name": "filter1"
-						},
-						{
-							"name": "sort1"
-						},
-						{
-							"name": "aggregate1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          EMPLOYEE_ID as string,",
-						"          FIRST_NAME as string,",
-						"          LAST_NAME as string,",
-						"          EMAIL as string,",
-						"          PHONE_NUMBER as string,",
-						"          HIRE_DATE as string,",
-						"          JOB_ID as string,",
-						"          SALARY as string,",
-						"          COMMISSION_PCT as string,",
-						"          MANAGER_ID as string,",
-						"          DEPARTMENT_ID as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source(output(",
-						"          EMPLOYEE_ID as string,",
-						"          FIRST_NAME as string,",
-						"          LAST_NAME as string,",
-						"          EMAIL as string,",
-						"          PHONE_NUMBER as string,",
-						"          HIRE_DATE as string,",
-						"          JOB_ID as string,",
-						"          SALARY as string,",
-						"          COMMISSION_PCT as string,",
-						"          MANAGER_ID as string,",
-						"          DEPARTMENT_ID as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source2",
-						"source1, source2 join(source1@EMPLOYEE_ID == source2@EMPLOYEE_ID,",
-						"     joinType:'inner',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     partitionBy('hash', 1),",
-						"     broadcast: 'auto')~> join1",
-						"join1 select(mapColumn(",
-						"          EMPLOYEE_ID = source1@EMPLOYEE_ID,",
-						"          FIRST_NAME = source1@FIRST_NAME,",
-						"          LAST_NAME = source1@LAST_NAME,",
-						"          EMAIL = source1@EMAIL,",
-						"          PHONE_NUMBER = source1@PHONE_NUMBER,",
-						"          HIRE_DATE = source1@HIRE_DATE,",
-						"          JOB_ID = source1@JOB_ID,",
-						"          SALARY = source1@SALARY,",
-						"          COMMISSION_PCT = source1@COMMISSION_PCT,",
-						"          MANAGER_ID = source1@MANAGER_ID,",
-						"          DEPARTMENT_ID = source1@DEPARTMENT_ID",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select1",
-						"select1 filter(EMPLOYEE_ID>='198') ~> filter1",
-						"aggregate1 sort(desc(EMPLOYEE_ID, true)) ~> sort1",
-						"filter1 aggregate(groupBy(EMPLOYEE_ID),",
-						"     SALARY = max(SALARY)) ~> aggregate1",
-						"sort1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     saveOrder: 1,",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     partitionBy('hash', 1)) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DS_Employee_DF')]",
-				"[concat(variables('factoryId'), '/datasets/DS_Employee_DF2')]",
-				"[concat(variables('factoryId'), '/datasets/DS_SQL_DF_sink')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/default')]",
-			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks",
-			"apiVersion": "2018-06-01",
-			"properties": {},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/dataflow2')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -1607,18 +1591,16 @@
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     partitionBy('hash', 1)) ~> employee",
+						"     ignoreNoFilesFound: false) ~> employee",
 						"source(output(",
 						"          Deptid as string,",
 						"          Deptname as string",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     partitionBy('hash', 1)) ~> Department",
+						"     ignoreNoFilesFound: false) ~> Department",
 						"employee, Department join(employee@Deptid == Department@Deptid,",
-						"     joinType:'inner',",
+						"     joinType:'outer',",
 						"     matchType:'exact',",
 						"     ignoreSpaces: false,",
 						"     broadcast: 'auto')~> joinbetweenEmployeeandDepartment",
@@ -1630,8 +1612,7 @@
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> select1",
-						"select1 sort(desc(Empsalary, true),",
-						"     partitionBy('hash', 1)) ~> sort1",
+						"select1 sort(desc(Empsalary, true)) ~> sort1",
 						"sort1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
@@ -1648,7 +1629,12 @@
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     errorHandlingOption: 'stopOnFirstError',",
-						"     partitionBy('hash', 1)) ~> sink1"
+						"     mapColumn(",
+						"          Empid,",
+						"          Empname,",
+						"          Empsalary,",
+						"          Departmentname = Deptname",
+						"     )) ~> sink1"
 					]
 				}
 			},
@@ -1659,174 +1645,11 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DS_Employee_DF_source')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
+			"name": "[concat(parameters('factoryName'), '/default')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks",
 			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_HRP_BLOB",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "Employee.csv",
-						"container": "hrpsource"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "Empid",
-						"type": "String"
-					},
-					{
-						"name": "Empname",
-						"type": "String"
-					},
-					{
-						"name": "Empsalary",
-						"type": "String"
-					},
-					{
-						"name": "Deptid",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_HRP_BLOB')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_Department_DF_sink')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_HRP_BLOB",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "Department.csv",
-						"container": "hrpsource"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "Deptid",
-						"type": "String"
-					},
-					{
-						"name": "Deptname",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_HRP_BLOB')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_Empdept_sink_df')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_HRP",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "Empid",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Empname",
-						"type": "varchar"
-					},
-					{
-						"name": "Empsalary",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Departmentname",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "employeedepartment"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_HRP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pipeline3')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Data flow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "dataflow2",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"employee": {},
-									"Department": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 80,
-								"computeType": "MemoryOptimized"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
-				"[concat(variables('factoryId'), '/dataflows/dataflow2')]"
-			]
+			"properties": {},
+			"dependsOn": []
 		}
 	]
 }
